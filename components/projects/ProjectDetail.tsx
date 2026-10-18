@@ -16,6 +16,74 @@ import {
   type Section,
 } from '@/data/content';
 import { ExperimentalTag, PaperThumb, StatusDot, pillPrimary, pillSecondary, useYearLabel } from '@/components/ui';
+import { ZoomableImage } from '@/components/ImageZoom';
+
+type Tone = 'prod' | 'lab';
+const toneText: Record<Tone, string> = { prod: 'text-prod', lab: 'text-lab' };
+
+// Pinta a saída do terminal com as mesmas cores que o próprio programa usa
+function TerminalLine({ line }: { line: string }) {
+  if (line.startsWith('$ ')) {
+    return (
+      <span className="block">
+        <span className="text-zinc-500">$ </span>
+        <span className="text-zinc-100">{line.slice(2)}</span>
+      </span>
+    );
+  }
+  const parts = line.split(/(\[\d+\]|#\d+|\[DAILY\]|\[DONE\]|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}:|^Empty$|^Cart$|^Shelf$|^History$)/);
+  return (
+    <span className="block min-h-[1lh]">
+      {parts.map((part, i) => {
+        let cls = 'text-zinc-300';
+        if (/^(\[\d+\]|#\d+)$/.test(part)) cls = 'text-fuchsia-400';
+        else if (part === '[DAILY]') cls = 'text-cyan-400';
+        else if (part === '[DONE]') cls = 'text-green-400';
+        else if (part === 'Empty') cls = 'text-red-400';
+        else if (/^\d{4}-/.test(part)) cls = 'text-yellow-300';
+        else if (['Cart', 'Shelf', 'History'].includes(part)) cls = 'font-semibold text-zinc-100';
+        return <span key={i} className={cls}>{part}</span>;
+      })}
+    </span>
+  );
+}
+
+function Gallery({ shots, className = 'mt-20' }: { shots: NonNullable<Project['gallery']>; className?: string }) {
+  const { t, pick } = useLanguage();
+  return (
+    <section className={className}>
+      <h2 className="mb-6 text-[26px] font-bold tracking-[-0.02em]">{t('project.screens')}</h2>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,340px),1fr))] items-start gap-5">
+        {shots.map((shot) => (
+          <figure key={shot.src} className="flex flex-col gap-2.5">
+            <ZoomableImage shot={shot} className="overflow-hidden rounded-2xl border border-line-strong bg-surface" />
+            {shot.caption && <figcaption className="text-sm text-muted">{pick(shot.caption)}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function NextProject({ list, project, kindLabel }: { list: Project[]; project: Project; kindLabel: string }) {
+  const { t } = useLanguage();
+  const idx = list.findIndex((p) => p.slug === project.slug);
+  const next = list[(idx + 1) % list.length];
+  return (
+    <nav aria-label={t('project.others')} className="mt-20 flex flex-wrap justify-between gap-4 border-t border-line pt-8">
+      <Link href="/projetos" className="flex flex-col gap-1.5">
+        <span className="font-mono text-xs text-subtle">{t('project.backToAll')}</span>
+        <span className="text-lg font-semibold text-ink">/projetos</span>
+      </Link>
+      {next && next.slug !== project.slug && (
+        <Link href={`/projetos/${next.slug}`} className="flex flex-col gap-1.5 text-right">
+          <span className="font-mono text-xs text-subtle">{t('project.next', { kind: kindLabel })}</span>
+          <span className="text-lg font-semibold text-ink">{next.title}</span>
+        </Link>
+      )}
+    </nav>
+  );
+}
 
 function LinkButtons({ links }: { links: ProjectLink[] }) {
   const { t, pick } = useLanguage();
@@ -68,17 +136,47 @@ function PublicationCard({ pub }: { pub: Publication }) {
   );
 }
 
-function SectionBlock({ section }: { section: Section }) {
+function SectionBlock({ section, tone = 'prod' }: { section: Section; tone?: Tone }) {
   const { pick } = useLanguage();
   return (
     <section>
       <h2 className="mb-3.5 text-[26px] font-bold tracking-[-0.02em]">{pick(section.title)}</h2>
       {section.type === 'text' && <p className="text-[17px] leading-[1.75] text-ink-2">{pick(section.body)}</p>}
+      {section.type === 'stats' && (
+        <>
+          <dl className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,200px),1fr))] gap-3">
+            {section.items.map((item) => (
+              <div key={item.value + item.label.pt} className="flex flex-col-reverse gap-1 rounded-2xl border border-line bg-surface px-5 py-4">
+                <dt className="text-sm leading-[1.5] text-muted">{pick(item.label)}</dt>
+                <dd className={`font-mono text-[28px] font-medium tracking-[-0.02em] ${toneText[tone]}`}>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+          {section.note && <p className="mt-4 text-[15px] leading-[1.65] text-muted">{pick(section.note)}</p>}
+        </>
+      )}
+      {section.type === 'terminal' && (
+        <>
+          {section.body && <p className="mb-4 text-[15px] leading-[1.65] text-muted">{pick(section.body)}</p>}
+          <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+            <div className="flex h-9 items-center gap-2 border-b border-zinc-800 px-4" aria-hidden="true">
+              <span className="h-[10px] w-[10px] rounded-full bg-zinc-700" />
+              <span className="h-[10px] w-[10px] rounded-full bg-zinc-700" />
+              <span className="h-[10px] w-[10px] rounded-full bg-zinc-700" />
+            </div>
+            <pre className="overflow-x-auto p-5 font-mono text-[13px] leading-[1.7]">
+              <code>
+                {section.output.split('\n').map((line, i) => <TerminalLine key={i} line={line} />)}
+              </code>
+            </pre>
+          </div>
+        </>
+      )}
       {section.type === 'list' && (
         <ul className="flex flex-col gap-3.5">
           {section.items.map((item, i) => (
             <li key={i} className="flex gap-3.5 text-[17px] leading-[1.65] text-ink-2">
-              <span className="shrink-0 pt-[3px] font-mono text-[13px] text-prod">{String(i + 1).padStart(2, '0')}</span>
+              <span className={`shrink-0 pt-[3px] font-mono text-[13px] ${toneText[tone]}`}>{String(i + 1).padStart(2, '0')}</span>
               <span><strong className="text-ink">{pick(item.title)}</strong> — {pick(item.body)}</span>
             </li>
           ))}
@@ -101,8 +199,6 @@ function SectionBlock({ section }: { section: Section }) {
 function ProductionDetail({ project }: { project: Project }) {
   const { t, pick } = useLanguage();
   const yearLabel = useYearLabel();
-  const idx = productionProjects.findIndex((p) => p.slug === project.slug);
-  const next = productionProjects[(idx + 1) % productionProjects.length];
   const pubs = (project.publications ?? []).map(getPublication).filter((p): p is Publication => Boolean(p));
 
   return (
@@ -142,14 +238,7 @@ function ProductionDetail({ project }: { project: Project }) {
               <span className="ml-4 truncate font-mono text-xs text-subtle">{project.links[0].href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
             )}
           </div>
-          <Image
-            src={asset(project.image.src)}
-            alt={pick(project.image.alt)}
-            width={project.image.width}
-            height={project.image.height}
-            priority
-            className="block h-auto w-full"
-          />
+          <ZoomableImage shot={project.image} priority />
         </figure>
       )}
 
@@ -171,21 +260,7 @@ function ProductionDetail({ project }: { project: Project }) {
         </article>
       </div>
 
-      {project.gallery && project.gallery.length > 0 && (
-        <section className="mt-20">
-          <h2 className="mb-6 text-[26px] font-bold tracking-[-0.02em]">{t('project.screens')}</h2>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,340px),1fr))] gap-5">
-            {project.gallery.map((shot) => (
-              <figure key={shot.src} className="flex flex-col gap-2.5">
-                <span className="relative block aspect-[3/2] overflow-hidden rounded-2xl border border-line-strong bg-surface">
-                  <Image src={asset(shot.src)} alt={pick(shot.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
-                </span>
-                {shot.caption && <figcaption className="text-sm text-muted">{pick(shot.caption)}</figcaption>}
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
+      {project.gallery && project.gallery.length > 0 && <Gallery shots={project.gallery} />}
 
       {pubs.length > 0 && (
         <div className="mt-[72px] flex flex-col gap-4">
@@ -193,18 +268,7 @@ function ProductionDetail({ project }: { project: Project }) {
         </div>
       )}
 
-      <nav aria-label="Outros projetos" className="mt-20 flex flex-wrap justify-between gap-4 border-t border-line pt-8">
-        <Link href="/projetos" className="flex flex-col gap-1.5">
-          <span className="font-mono text-xs text-subtle">{t('project.backToAll')}</span>
-          <span className="text-lg font-semibold text-ink">/projetos</span>
-        </Link>
-        {next && next.slug !== project.slug && (
-          <Link href={`/projetos/${next.slug}`} className="flex flex-col gap-1.5 text-right">
-            <span className="font-mono text-xs text-subtle">{t('project.next', { kind: t('production.title') })}</span>
-            <span className="text-lg font-semibold text-ink">{next.title}</span>
-          </Link>
-        )}
-      </nav>
+      <NextProject list={productionProjects} project={project} kindLabel={t('production.title')} />
     </main>
   );
 }
@@ -243,16 +307,9 @@ function LabDetail({ project }: { project: Project }) {
           <p className="font-mono text-[13px] text-subtle">{project.stack.join(' · ')}</p>
         </div>
         {project.image && (
-          <span className="block w-full min-w-0 flex-[1_1_480px] overflow-hidden rounded-[20px] border border-line-strong">
-            <Image
-              src={asset(project.image.src)}
-              alt={pick(project.image.alt)}
-              width={project.image.width}
-              height={project.image.height}
-              priority
-              className="block h-auto w-full"
-            />
-          </span>
+          <div className="w-full min-w-0 flex-[1_1_480px]">
+            <ZoomableImage shot={project.image} priority className="overflow-hidden rounded-[20px] border border-line-strong" />
+          </div>
         )}
       </div>
 
@@ -272,6 +329,14 @@ function LabDetail({ project }: { project: Project }) {
           )}
         </section>
       )}
+
+      {project.sections && project.sections.length > 0 && (
+        <article className="mb-20 flex max-w-[860px] flex-col gap-12">
+          {project.sections.map((s) => <SectionBlock key={s.title.pt} section={s} tone="lab" />)}
+        </article>
+      )}
+
+      {project.gallery && project.gallery.length > 0 && <Gallery shots={project.gallery} className="mb-20" />}
 
       {pubs.length > 0 && (
         <div className="mb-20 flex flex-col gap-4">
@@ -302,6 +367,8 @@ function LabDetail({ project }: { project: Project }) {
           ))}
         </div>
       </section>
+
+      <NextProject list={labProjects} project={project} kindLabel={t('lab.title')} />
     </main>
   );
 }

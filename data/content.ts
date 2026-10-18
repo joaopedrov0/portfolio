@@ -1,3 +1,5 @@
+import { ARCA_SESSION } from './arca-session';
+
 export type Locale = 'pt' | 'en';
 export type Localized = Record<Locale, string>;
 
@@ -28,7 +30,9 @@ export interface Fact {
 export type Section =
   | { type: 'text'; title: Localized; body: Localized }
   | { type: 'list'; title: Localized; items: { title: Localized; body: Localized }[] }
-  | { type: 'cards'; title: Localized; items: { title: Localized; body: Localized }[] };
+  | { type: 'cards'; title: Localized; items: { title: Localized; body: Localized }[] }
+  | { type: 'stats'; title: Localized; items: { value: string; label: Localized }[]; note?: Localized }
+  | { type: 'terminal'; title: Localized; body?: Localized; output: string };
 
 export interface Project {
   slug: string;
@@ -119,7 +123,7 @@ export const projects: Project[] = [
     },
     logo: '/img/emmas-librarian/logo.svg',
     links: [
-      { kind: 'download', href: 'https://mastrien.github.io/emmas_librarian/', label: L('Baixar para Windows', 'Download for Windows') },
+      { kind: 'live', href: 'https://mastrien.github.io/emmas_librarian/', label: L('Acessar o site', 'Visit the site') },
       { kind: 'repo', href: 'https://github.com/mastrien/emmas_librarian' },
     ],
     facts: [
@@ -333,8 +337,8 @@ export const projects: Project[] = [
         type: 'text',
         title: L('Por que está suspenso', 'Why it is suspended'),
         body: L(
-          'O grupo não deu continuidade porque surgiram outras prioridades, e na época os colegas ainda tinham pouca experiência, então eu teria que seguir sozinho. Hoje o grupo está mais experiente e planejamos voltar com o projeto.',
-          'The group stopped because other priorities came up, and back then my teammates had little experience, so I would have had to carry on alone. The group is more experienced now and we plan to bring the project back.'
+          'O grupo não deu continuidade porque surgiram outras prioridades, e na época o time não tinha experiência o suficiente para seguir com o projeto de forma sólida. Hoje o grupo está mais experiente e planejamos voltar com o projeto.',
+          'The group stopped because other priorities came up, and back then the team did not have enough experience to carry the project forward on solid ground. The group is more experienced now and we plan to bring the project back.'
         ),
       },
       {
@@ -392,10 +396,141 @@ export const projects: Project[] = [
       'A two-sided system for the writing and review cycle of scientific papers. Validating the hypothesis with NLI models.'
     ),
     details: L(
-      'Está em fase de validar a hipótese: testando modelos de NLI e verificando se as correções de orientadores têm padrões repetíveis que alguma técnica de IA consiga aprender. Aqui o objetivo não é aprender, e sim resolver o problema.',
-      'It is in the hypothesis-validation phase: testing NLI models and checking whether advisors’ corrections follow repeatable patterns that some AI technique could learn. The goal here is not learning, but solving the problem.'
+      'Nome provisório: Draft Pre-Checks. Está na Fase 0, que testa a hipótese antes de construir o produto: as correções de um orientador têm padrões repetíveis que uma ferramenta consiga pegar? Aqui o objetivo não é aprender, e sim resolver o problema.',
+      'Working title: Draft Pre-Checks. It is in Phase 0, which tests the hypothesis before building the product: do an advisor’s corrections have repeatable patterns a tool could catch? The goal here is not learning, but solving the problem.'
     ),
-    stack: ['Python', 'NLI'],
+    stack: ['Python', 'Transformers', 'SQLite', 'Colab'],
+    image: {
+      src: '/img/paper-advisor/experimentos.png',
+      width: 1103,
+      height: 728,
+      alt: L('Documentação dos experimentos com bases públicas', 'Documentation of the public-dataset experiments'),
+    },
+    gallery: [
+      {
+        src: '/img/paper-advisor/modelo-nli.png',
+        width: 989,
+        height: 726,
+        alt: L('Documentação do modelo de NLI da Fase 0', 'Documentation of the Phase 0 NLI model'),
+        caption: L('A documentação explica o modelo de NLI para quem não é da área', 'The docs explain the NLI model for non-specialists'),
+      },
+    ],
+    sections: [
+      {
+        type: 'text',
+        title: L('O problema', 'The problem'),
+        body: L(
+          'Orientadores gastam muito tempo revisando rascunhos e repetindo as mesmas correções. A ideia é que a ferramenta aprenda com as correções antigas de um orientador e avise o autor antes de ele enviar o próximo rascunho.',
+          'Advisors spend a lot of time reviewing drafts and repeating the same corrections. The idea is for the tool to learn from an advisor’s past corrections and warn the author before the next draft is sent.'
+        ),
+      },
+      {
+        type: 'list',
+        title: L('Como funcionaria', 'How it would work'),
+        items: [
+          {
+            title: L('Aprender com as correções', 'Learn from corrections'),
+            body: L(
+              'pares antes/depois extraídos das sugestões do Google Docs, que vêm como alterações controladas no .docx exportado.',
+              'before/after pairs extracted from Google Docs suggestions, which come as tracked changes in the exported .docx.'
+            ),
+          },
+          {
+            title: L('Regras com aprovação do orientador', 'Rules the advisor approves'),
+            body: L(
+              'correções repetidas viram regras, mas só valem como aprovadas quando o orientador aprova.',
+              'repeated corrections become rules, but they only count as approved once the advisor approves them.'
+            ),
+          },
+          {
+            title: L('Pré-verificações para o autor', 'Pre-checks for the author'),
+            body: L(
+              'verificações determinísticas, as regras do orientador e testes de intenção, em que embeddings acham o parágrafo e um modelo de NLI confere se ele diz o que a seção precisa dizer.',
+              'deterministic checks, the advisor’s rules and intent tests, where embeddings find the paragraph and an NLI model checks whether it says what the section must say.'
+            ),
+          },
+          {
+            title: L('Avisos, nunca bloqueios', 'Warnings, never blockers'),
+            body: L(
+              'tudo roda localmente, porque rascunhos são trabalhos não publicados.',
+              'everything runs locally, because drafts are unpublished work.'
+            ),
+          },
+        ],
+      },
+      {
+        type: 'stats',
+        title: L('Fase 0 em números', 'Phase 0 in numbers'),
+        items: [
+          { value: '54 → 40', label: L('edições extraídas de 4 arquivos, e pares depois de juntar fragmentos', 'edits extracted from 4 files, and pairs after merging fragments') },
+          { value: '22%', label: L('das edições em categorias repetíveis (9 de 40)', 'of edits in repeatable categories (9 of 40)') },
+          { value: '29%', label: L('de acerto na recuperação de correções parecidas, hit@5 (2 de 7)', 'hit rate when retrieving similar corrections, hit@5 (2 of 7)') },
+          { value: '10%', label: L('das edições que o LanguageTool já marcaria (3 de 31)', 'of edits LanguageTool would already flag (3 of 31)') },
+          { value: '67%', label: L('de acerto do modelo de NLI no teste de sanidade (20 de 30)', 'NLI model accuracy on the sanity test (20 of 30)') },
+        ],
+        note: L(
+          'Com 4 arquivos de um único orientador, os números são só descritivos. Pela regra fixada antes de ver os dados, o resultado da Fase 0 é estreitar o escopo.',
+          'With 4 files from a single advisor, the numbers are descriptive only. By the rule fixed before looking at the data, the Phase 0 outcome is to narrow the scope.'
+        ),
+      },
+      {
+        type: 'cards',
+        title: L('Testes com bases públicas e outros modelos', 'Tests with public datasets and other models'),
+        items: [
+          {
+            title: L('ASSIN2 · 2.448 pares', 'ASSIN2 · 2,448 pairs'),
+            body: L(
+              'O modelo de NLI acerta 89% em pares curtos de frases em português. A competência em português deixou de ser dúvida.',
+              'The NLI model gets 89% right on short Portuguese sentence pairs. Its Portuguese competence is no longer in doubt.'
+            ),
+          },
+          {
+            title: L('IteraTeR · até ~197 mil edições', 'IteraTeR · up to ~197k edits'),
+            body: L(
+              'Buscar frases parecidas para prever o tipo de correção não funcionou: com 5 candidatos, nenhum modelo superou o acaso, nem com 50 vezes mais dados. Com 1 candidato há um sinal pequeno, de +1,7 a +3,9 pontos.',
+              'Finding similar sentences to predict the kind of correction did not work: with 5 candidates, no model beat chance, not even with 50 times more data. With 1 candidate there is a small signal, +1.7 to +3.9 points.'
+            ),
+          },
+          {
+            title: L('PublicHearingBR · 4.237 pares', 'PublicHearingBR · 4,237 pairs'),
+            body: L(
+              'Com um texto longo como premissa, o modelo fica perto do acaso (53,9% de acurácia balanceada). Dividir o texto em frases sobe para 65,2%, +11,3 pontos (IC 95% de +8,4 a +14,2).',
+              'With a long text as the premise, the model is close to chance (53.9% balanced accuracy). Splitting the text into sentences raises it to 65.2%, +11.3 points (95% CI +8.4 to +14.2).'
+            ),
+          },
+          {
+            title: L('6 modelos de NLI comparados', '6 NLI models compared'),
+            body: L(
+              'O bge-m3-zeroshot-v2.0, treinado para textos longos, lê o texto inteiro com 76,9%, +22,9 pontos sobre o modelo da Fase 0 — e para ele dividir em frases piora.',
+              'bge-m3-zeroshot-v2.0, trained for long inputs, reads the whole text at 76.9%, +22.9 points over the Phase 0 model — and for it, splitting into sentences hurts.'
+            ),
+          },
+          {
+            title: L('bge-m3 nos 30 pares, rodando local', 'bge-m3 on the 30 pairs, run locally'),
+            body: L(
+              '93,1% contra 62,5% no parágrafo inteiro, sem ser mais lento por classificação (11,2 s contra 15,7 s) e com 1,94 GB de memória contra 1,44 GB.',
+              '93.1% against 62.5% on the whole paragraph, without being slower per classification (11.2 s against 15.7 s), using 1.94 GB of memory against 1.44 GB.'
+            ),
+          },
+        ],
+      },
+      {
+        type: 'text',
+        title: L('Como os testes são feitos', 'How the tests are run'),
+        body: L(
+          'Limiares e protocolos são fixados antes de ver os resultados, e os resultados negativos ficam registrados junto com os positivos. A validação usa k-fold agrupado por família de rascunho, para que versões do mesmo texto nunca fiquem dos dois lados, e os intervalos de confiança vêm de bootstrap. As rodadas pesadas vão para o Colab só com dados públicos; os rascunhos reais nunca saem da máquina, e só números agregados aparecem fora dela.',
+          'Thresholds and protocols are fixed before looking at results, and negative results are recorded alongside positive ones. Validation uses k-fold grouped by draft family, so versions of the same text never end up on both sides, and confidence intervals come from bootstrapping. Heavy runs go to Colab with public data only; real drafts never leave the machine, and only aggregate numbers appear outside it.'
+        ),
+      },
+      {
+        type: 'text',
+        title: L('Estado atual', 'Current state'),
+        body: L(
+          'Ainda na Fase 0. O passo mais recente é um protótipo local, o intent lab: colo um texto e os pontos que ele precisa conter, e a página compara o modelo da Fase 0 com o bge-m3 à medida que as classificações saem, guardando as probabilidades para calibrar um limiar depois. Nenhum modelo padrão foi trocado ainda.',
+          'Still in Phase 0. The latest step is a local prototype, the intent lab: I paste a text and the points it must contain, and the page compares the Phase 0 model with bge-m3 as classifications come in, saving the probabilities to calibrate a threshold later. No default model has been changed yet.'
+        ),
+      },
+    ],
     links: [],
   },
   {
@@ -417,6 +552,21 @@ export const projects: Project[] = [
       'I wanted to test AI agents in game development and ended up also testing 3D modeling, image generation, animation and rigging, plus optimization as problems came up.'
     ),
     stack: ['Godot'],
+    image: {
+      src: '/img/ultimato-de-tho-ka/gameplay.png',
+      width: 1271,
+      height: 710,
+      alt: L('Partida no modo dungeons, com a personagem Kataha', 'A dungeons run with the character Kataha'),
+    },
+    gallery: [
+      {
+        src: '/img/ultimato-de-tho-ka/selecao-personagem.png',
+        width: 1272,
+        height: 712,
+        alt: L('Lobby com a escolha de campeão', 'Lobby with the champion selection'),
+        caption: L('Lobby cooperativo e escolha de campeão', 'Co-op lobby and champion selection'),
+      },
+    ],
     links: [
       {
         kind: 'download',
@@ -474,9 +624,30 @@ export const projects: Project[] = [
     title: 'arca',
     year: '2026',
     status: 'done',
-    summary: L('Um build to learn para aprender Rust.', 'A build-to-learn project for learning Rust.'),
-    learned: L('Rust.', 'Rust.'),
-    stack: ['Rust'],
+    summary: L(
+      'Gerenciador de tarefas de terminal em Rust: uma estante para o que está pendente, um carrinho para o que é do dia e um histórico do que foi feito.',
+      'A terminal task manager in Rust: a shelf for what is pending, a cart for today’s tasks and a history of what got done.'
+    ),
+    details: L(
+      'Um build to learn para aprender Rust. Tarefas novas entram no carrinho; o que fica para depois volta para a estante; e o comando check fecha o dia: as tarefas concluídas vão para o histórico, e as diárias voltam para o carrinho. Os dados ficam em um SQLite na pasta de dados do sistema, com as migrações embutidas no próprio binário.',
+      'A build-to-learn project for learning Rust. New tasks go into the cart; whatever is for later goes back to the shelf; and the check command closes the day: finished tasks move to the history, and daily ones go back into the cart. Data lives in SQLite in the system data folder, with migrations embedded in the binary itself.'
+    ),
+    learned: L(
+      'Rust, na prática: uma CLI com clap, SQLite com rusqlite e migrações embutidas no binário com include_dir.',
+      'Rust, in practice: a CLI with clap, SQLite with rusqlite, and migrations embedded in the binary with include_dir.'
+    ),
+    stack: ['Rust', 'clap', 'SQLite'],
+    sections: [
+      {
+        type: 'terminal',
+        title: L('Uma sessão de exemplo', 'A sample session'),
+        body: L(
+          'Saída real do arca, instalado com cargo install em um container descartável e usado com tarefas fictícias.',
+          'Real arca output, installed with cargo install in a throwaway container and used with made-up tasks.'
+        ),
+        output: ARCA_SESSION,
+      },
+    ],
     links: [{ kind: 'repo', href: 'https://github.com/mastrien/arca' }],
   },
   {
@@ -511,6 +682,7 @@ export const projects: Project[] = [
       'It is meant to be the foundation for materials that will later go into IFVest’s content review module, but I also ended up using it to write a neural networks guide to help some classmates.'
     ),
     stack: ['Next.js', 'Supabase'],
+    image: { src: '/img/zynlib/home.png', width: 1149, height: 787, alt: L('Material de redes neurais na ZynLib', 'Neural networks guide on ZynLib') },
     links: [
       { kind: 'live', href: 'https://zynlib.vercel.app' },
       { kind: 'repo', href: `${GH}zynlib` },
@@ -528,6 +700,7 @@ export const projects: Project[] = [
       'I wanted to bring useful tools for scientific work together in one place, in a simple way.'
     ),
     stack: ['JavaScript'],
+    image: { src: '/img/abntoolbox/home.png', width: 2880, height: 1620, alt: L('Página inicial do ABNToolbox', 'ABNToolbox home page') },
     links: [
       { kind: 'live', href: `${PAGES}abntoolbox/` },
       { kind: 'repo', href: `${GH}abntoolbox` },
@@ -545,6 +718,7 @@ export const projects: Project[] = [
     ),
     details: L('Desenvolvi sozinho. Foi pouco usado até agora, e o projeto está pausado.', 'I built it alone. It has seen little use so far, and the project is paused.'),
     stack: ['JavaScript'],
+    image: { src: '/img/the-architect/home.png', width: 2880, height: 1620, alt: L('Página inicial do The Architect', 'The Architect home page') },
     links: [
       { kind: 'live', href: `${PAGES}architect/` },
       { kind: 'repo', href: `${GH}architect` },
@@ -604,6 +778,7 @@ export const projects: Project[] = [
     status: 'done',
     summary: L('Quiz para um amigo professor usar durante as aulas.', 'A quiz for a teacher friend to use during class.'),
     stack: ['HTML', 'JavaScript'],
+    image: { src: '/img/desafio-x/home.png', width: 2880, height: 1620, alt: L('Tela inicial do Desafio X', 'Desafio X start screen') },
     links: [
       { kind: 'live', href: `${PAGES}desafio_x/` },
       { kind: 'repo', href: `${GH}desafio_x` },
@@ -618,6 +793,7 @@ export const projects: Project[] = [
     summary: L('Minha versão do LoLdle para universos de RPG que joguei com amigos.', 'My take on LoLdle for RPG universes I played with friends.'),
     details: L('Não foi para aprender nada: só queria criar para jogar com os amigos.', 'It was not about learning anything: I just wanted to make it to play with friends.'),
     stack: ['HTML', 'JavaScript'],
+    image: { src: '/img/rpgdle/home.png', width: 2880, height: 1620, alt: L('Tela do RPGdle', 'RPGdle screen') },
     links: [
       { kind: 'live', href: `${PAGES}rpgdle/` },
       { kind: 'repo', href: `${GH}rpgdle` },
@@ -678,6 +854,7 @@ export const projects: Project[] = [
     ),
     learned: L('A consumir uma API.', 'How to consume an API.'),
     stack: ['JavaScript', 'API'],
+    image: { src: '/img/dnd-search/home.jpg', width: 2880, height: 1620, alt: L('Tela do SpellSearch', 'SpellSearch screen') },
     links: [
       { kind: 'live', href: `${PAGES}monstersearch/`, label: L('Monstros', 'Monsters') },
       { kind: 'live', href: `${PAGES}spellsearch/`, label: L('Magias', 'Spells') },
@@ -744,6 +921,7 @@ export const projects: Project[] = [
       'The list-shuffling algorithm. I had to look it up, but I didn’t copy the code until I fully understood how it worked — I still remember simulating it with playing cards on a table.'
     ),
     stack: ['HTML', 'JavaScript'],
+    image: { src: '/img/sortear-grupos/home.png', width: 2880, height: 1620, alt: L('Tela do Sorteador de Grupos', 'Group draw screen') },
     links: [
       { kind: 'live', href: `${PAGES}sortearGrupos` },
       { kind: 'repo', href: `${GH}sortearGrupos` },
