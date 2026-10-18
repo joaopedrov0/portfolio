@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { asset } from '@/lib/asset';
 import Link from 'next/link';
 import { Download, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
@@ -56,7 +57,7 @@ function PublicationCard({ pub }: { pub: Publication }) {
   const { t, pick } = useLanguage();
   const isPdf = pub.href.endsWith('.pdf');
   return (
-    <a href={pub.href} className="flex flex-wrap items-center gap-5 rounded-[20px] border border-line bg-surface p-5 text-ink">
+    <a href={asset(pub.href)} className="flex flex-wrap items-center gap-5 rounded-[20px] border border-line bg-surface p-5 text-ink">
       <PaperThumb src={pub.thumb} alt={t('publications.cover')} width={72} />
       <span className="flex min-w-0 flex-[1_1_300px] flex-col gap-1.5">
         <span className="font-mono text-xs text-pub">{t('publications.publication')} · {pub.event} · {pick(pub.kind).toLowerCase()}</span>
@@ -111,7 +112,7 @@ function ProductionDetail({ project }: { project: Project }) {
       <div className="mb-14 flex flex-wrap items-center gap-x-12 gap-y-8">
         {project.logo && (
           <div className="flex h-[120px] w-[120px] shrink-0 items-center justify-center rounded-[28px] border border-line bg-prod-soft">
-            <Image src={project.logo} alt={`Logo do ${project.title}`} width={80} height={80} unoptimized className="dark:invert" />
+            <Image src={asset(project.logo)} alt={`Logo do ${project.title}`} width={80} height={80} unoptimized className="dark:invert" />
           </div>
         )}
         <div className="min-w-0 flex-[1_1_520px]">
@@ -142,7 +143,7 @@ function ProductionDetail({ project }: { project: Project }) {
             )}
           </div>
           <span className="relative block aspect-video">
-            <Image src={project.image.src} alt={pick(project.image.alt)} fill priority sizes="(min-width: 1200px) 1152px, 100vw" className="object-cover object-top" />
+            <Image src={asset(project.image.src)} alt={pick(project.image.alt)} fill priority sizes="(min-width: 1200px) 1152px, 100vw" className="object-cover object-top" />
           </span>
         </figure>
       )}
@@ -172,7 +173,7 @@ function ProductionDetail({ project }: { project: Project }) {
             {project.gallery.map((shot) => (
               <figure key={shot.src} className="flex flex-col gap-2.5">
                 <span className="relative block aspect-[3/2] overflow-hidden rounded-2xl border border-line-strong bg-surface">
-                  <Image src={shot.src} alt={pick(shot.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
+                  <Image src={asset(shot.src)} alt={pick(shot.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
                 </span>
                 {shot.caption && <figcaption className="text-sm text-muted">{pick(shot.caption)}</figcaption>}
               </figure>
@@ -238,7 +239,7 @@ function LabDetail({ project }: { project: Project }) {
         </div>
         {project.image && (
           <span className="relative block aspect-[4/3] w-full min-w-0 flex-[1_1_480px] overflow-hidden rounded-[20px] border border-line-strong">
-            <Image src={project.image.src} alt={pick(project.image.alt)} fill priority sizes="(min-width: 1200px) 560px, 100vw" className="object-cover object-top" />
+            <Image src={asset(project.image.src)} alt={pick(project.image.alt)} fill priority sizes="(min-width: 1200px) 560px, 100vw" className="object-cover object-top" />
           </span>
         )}
       </div>
@@ -276,7 +277,7 @@ function LabDetail({ project }: { project: Project }) {
             <Link key={m.slug} href={`/projetos/${m.slug}`} className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-3.5 text-ink">
               {m.image ? (
                 <span className="relative block h-16 w-24 shrink-0 overflow-hidden rounded-[10px]">
-                  <Image src={m.image.src} alt={pick(m.image.alt)} fill sizes="96px" className="object-cover object-top" />
+                  <Image src={asset(m.image.src)} alt={pick(m.image.alt)} fill sizes="96px" className="object-cover object-top" />
                 </span>
               ) : (
                 <span aria-hidden="true" className="h-16 w-24 shrink-0 rounded-[10px] bg-lab-soft" />

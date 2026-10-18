@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { asset } from '@/lib/asset';
 import { ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { statusLabels, type Project, type ProjectStatus } from '@/data/content';
@@ -74,7 +75,7 @@ export function PaperThumb({ src, alt, width }: { src?: string; alt: string; wid
   if (src) {
     return (
       <span className="relative block shrink-0 overflow-hidden rounded-md border border-line bg-white" style={{ width, aspectRatio: '210 / 297' }}>
-        <Image src={src} alt={alt} fill sizes={`${width}px`} className="object-cover object-top" />
+        <Image src={asset(src)} alt={alt} fill sizes={`${width}px`} className="object-cover object-top" />
       </span>
     );
   }

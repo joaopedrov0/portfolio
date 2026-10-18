@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { asset } from '@/lib/asset';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
@@ -65,7 +66,7 @@ export function ProductionSection() {
         <Link href={`/projetos/${emma.slug}`} className={`${card} flex min-w-0 flex-[2_1_640px] flex-col overflow-hidden text-ink`}>
           {emma.image && (
             <span className="relative block aspect-video border-b border-line">
-              <Image src={emma.image.src} alt={pick(emma.image.alt)} fill priority sizes="(min-width: 1200px) 760px, 100vw" className="object-cover object-top" />
+              <Image src={asset(emma.image.src)} alt={pick(emma.image.alt)} fill priority sizes="(min-width: 1200px) 760px, 100vw" className="object-cover object-top" />
             </span>
           )}
           <span className="flex flex-col gap-3.5 px-6 pt-7 pb-8 sm:px-8">
@@ -75,7 +76,7 @@ export function ProductionSection() {
               <span>{t('production.desktop')}</span>
             </span>
             <span className="flex items-center gap-3.5">
-              {emma.logo && <Image src={emma.logo} alt="" width={40} height={40} unoptimized className="dark:invert" />}
+              {emma.logo && <Image src={asset(emma.logo)} alt="" width={40} height={40} unoptimized className="dark:invert" />}
               <h3 className="text-[30px] font-bold tracking-[-0.02em]">{emma.title}</h3>
             </span>
             <p className="max-w-[640px] text-base leading-relaxed text-muted">{pick(emma.summary)}</p>
@@ -88,7 +89,7 @@ export function ProductionSection() {
           <Link href={`/projetos/${ifvest.slug}`} className={`${card} flex flex-col overflow-hidden text-ink`}>
             {ifvest.image && (
               <span className="relative block h-[190px] border-b border-line">
-                <Image src={ifvest.image.src} alt={pick(ifvest.image.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
+                <Image src={asset(ifvest.image.src)} alt={pick(ifvest.image.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
               </span>
             )}
             <span className="flex flex-col gap-2.5 px-6 pt-[22px] pb-6">
@@ -221,7 +222,7 @@ export function PublicationsSection() {
       <p className="mb-7 text-base text-muted">{t('publications.description')}</p>
 
       {featured && (
-        <a href={featured.href} className={`${card} mb-5 flex flex-wrap items-stretch gap-7 p-6 text-ink`}>
+        <a href={asset(featured.href)} className={`${card} mb-5 flex flex-wrap items-stretch gap-7 p-6 text-ink`}>
           <PaperThumb src={featured.thumb} alt={t('publications.cover')} width={220} />
           <span className="flex min-w-0 flex-[1_1_300px] flex-col gap-3.5 py-2">
             <span className="flex flex-wrap items-center gap-2 font-mono text-xs">

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { asset } from '@/lib/asset';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
@@ -55,7 +56,7 @@ export default function ProjectsBrowser() {
               <Link key={p.slug} href={`/projetos/${p.slug}`} className="flex flex-wrap gap-8 rounded-3xl border border-line bg-surface p-6 text-ink">
                 {p.image && (
                   <span className="relative block aspect-[16/10] w-full max-w-[520px] min-w-0 flex-[1_1_420px] overflow-hidden rounded-[14px] border border-line">
-                    <Image src={p.image.src} alt={pick(p.image.alt)} fill sizes="(min-width: 1200px) 520px, 100vw" className="object-cover object-top" />
+                    <Image src={asset(p.image.src)} alt={pick(p.image.alt)} fill sizes="(min-width: 1200px) 520px, 100vw" className="object-cover object-top" />
                   </span>
                 )}
                 <span className="flex min-w-0 flex-[1_1_360px] flex-col justify-center gap-3.5">
@@ -99,7 +100,7 @@ export default function ProjectsBrowser() {
               <Link key={p.slug} href={`/projetos/${p.slug}`} className="flex flex-col overflow-hidden rounded-[20px] border border-line bg-surface text-ink">
                 {p.image ? (
                   <span className="relative block h-[190px] border-b border-line">
-                    <Image src={p.image.src} alt={pick(p.image.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
+                    <Image src={asset(p.image.src)} alt={pick(p.image.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
                   </span>
                 ) : (
                   <span aria-hidden="true" className="flex h-[120px] items-end border-b border-line bg-lab-soft/50 px-[22px] pb-4 font-mono text-[13px] text-lab">
