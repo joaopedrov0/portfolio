@@ -75,6 +75,13 @@ export const translations = {
       allProjects: 'Todos os projetos →',
       backToAll: '← Todos os projetos',
       next: 'Próximo em {kind} →',
+      others: 'Outros projetos',
+    },
+    zoom: {
+      open: 'Ampliar imagem: {alt}',
+      in: 'Aproximar',
+      out: 'Afastar',
+      close: 'Fechar',
     },
   },
   en: {
@@ -153,6 +160,13 @@ export const translations = {
       allProjects: 'All projects →',
       backToAll: '← All projects',
       next: 'Next in {kind} →',
+      others: 'Other projects',
+    },
+    zoom: {
+      open: 'Enlarge image: {alt}',
+      in: 'Zoom in',
+      out: 'Zoom out',
+      close: 'Close',
     },
   },
 };

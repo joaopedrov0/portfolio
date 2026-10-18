@@ -88,7 +88,7 @@ export function ProductionSection() {
         <div className="flex min-w-0 flex-[1_1_340px] flex-col gap-5">
           <Link href={`/projetos/${ifvest.slug}`} className={`${card} flex flex-col overflow-hidden text-ink`}>
             {ifvest.image && (
-              <span className="relative block h-[190px] border-b border-line">
+              <span className="relative block aspect-video border-b border-line">
                 <Image src={asset(ifvest.image.src)} alt={pick(ifvest.image.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
               </span>
             )}

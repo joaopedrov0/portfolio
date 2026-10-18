@@ -55,7 +55,7 @@ export default function ProjectsBrowser() {
             {productionProjects.map((p) => (
               <Link key={p.slug} href={`/projetos/${p.slug}`} className="flex flex-wrap gap-8 rounded-3xl border border-line bg-surface p-6 text-ink">
                 {p.image && (
-                  <span className="relative block aspect-[16/10] w-full max-w-[520px] min-w-0 flex-[1_1_420px] overflow-hidden rounded-[14px] border border-line">
+                  <span className="relative block aspect-video w-full max-w-[520px] min-w-0 flex-[1_1_420px] overflow-hidden rounded-[14px] border border-line">
                     <Image src={asset(p.image.src)} alt={pick(p.image.alt)} fill sizes="(min-width: 1200px) 520px, 100vw" className="object-cover object-top" />
                   </span>
                 )}
@@ -99,7 +99,7 @@ export default function ProjectsBrowser() {
             {labProjects.map((p) => (
               <Link key={p.slug} href={`/projetos/${p.slug}`} className="flex flex-col overflow-hidden rounded-[20px] border border-line bg-surface text-ink">
                 {p.image ? (
-                  <span className="relative block h-[190px] border-b border-line">
+                  <span className="relative block aspect-video border-b border-line">
                     <Image src={asset(p.image.src)} alt={pick(p.image.alt)} fill sizes="(min-width: 1200px) 380px, 100vw" className="object-cover object-top" />
                   </span>
                 ) : (
