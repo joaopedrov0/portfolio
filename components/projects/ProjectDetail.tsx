@@ -142,9 +142,14 @@ function ProductionDetail({ project }: { project: Project }) {
               <span className="ml-4 truncate font-mono text-xs text-subtle">{project.links[0].href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
             )}
           </div>
-          <span className="relative block aspect-video">
-            <Image src={asset(project.image.src)} alt={pick(project.image.alt)} fill priority sizes="(min-width: 1200px) 1152px, 100vw" className="object-cover object-top" />
-          </span>
+          <Image
+            src={asset(project.image.src)}
+            alt={pick(project.image.alt)}
+            width={project.image.width}
+            height={project.image.height}
+            priority
+            className="block h-auto w-full"
+          />
         </figure>
       )}
 
@@ -238,8 +243,15 @@ function LabDetail({ project }: { project: Project }) {
           <p className="font-mono text-[13px] text-subtle">{project.stack.join(' · ')}</p>
         </div>
         {project.image && (
-          <span className="relative block aspect-[4/3] w-full min-w-0 flex-[1_1_480px] overflow-hidden rounded-[20px] border border-line-strong">
-            <Image src={asset(project.image.src)} alt={pick(project.image.alt)} fill priority sizes="(min-width: 1200px) 560px, 100vw" className="object-cover object-top" />
+          <span className="block w-full min-w-0 flex-[1_1_480px] overflow-hidden rounded-[20px] border border-line-strong">
+            <Image
+              src={asset(project.image.src)}
+              alt={pick(project.image.alt)}
+              width={project.image.width}
+              height={project.image.height}
+              priority
+              className="block h-auto w-full"
+            />
           </span>
         )}
       </div>

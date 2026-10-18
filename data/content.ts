@@ -13,6 +13,8 @@ export interface ProjectLink {
 
 export interface Shot {
   src: string;
+  width: number;
+  height: number;
   alt: Localized;
   caption?: Localized;
 }
@@ -110,7 +112,9 @@ export const projects: Project[] = [
     ),
     stack: ['Electron', 'React', 'Vite', 'SQLite', 'ONNX'],
     image: {
-      src: '/img/emmas-librarian/landing.jpg',
+      src: '/img/emmas-librarian/landing.png',
+      width: 2880,
+      height: 1518,
       alt: L("Landing page do Emma's Librarian: a suíte completa para revisão sistemática", "Emma's Librarian landing page: the complete suite for systematic reviews"),
     },
     logo: '/img/emmas-librarian/logo.svg',
@@ -205,10 +209,10 @@ export const projects: Project[] = [
       },
     ],
     gallery: [
-      { src: '/img/emmas-librarian/busca-federada.png', alt: L('Construtor visual de consulta em árvore lógica', 'Visual query builder with a logic tree'), caption: L('Busca unificada com construtor visual', 'Unified search with a visual query builder') },
-      { src: '/img/emmas-librarian/biblioteca-pdf.png', alt: L("Biblioteca de PDFs do Emma's Librarian", "Emma's Librarian PDF library"), caption: L('Biblioteca de PDFs e leitor integrado', 'PDF library and built-in reader') },
-      { src: '/img/emmas-librarian/rag-ia.png', alt: L('Conversa com IA sobre os artigos, com citação de página', 'AI chat about the papers, with page citations'), caption: L('IA com RAG e citação da página de origem', 'RAG-powered AI with source page citations') },
-      { src: '/img/emmas-librarian/agenda.png', alt: L('Agenda do projeto de pesquisa', 'Research project schedule'), caption: L('Agenda e rotina da pesquisa', 'Schedule and research routine') },
+      { src: '/img/emmas-librarian/busca-federada.png', width: 1197, height: 783, alt: L('Construtor visual de consulta em árvore lógica', 'Visual query builder with a logic tree'), caption: L('Busca unificada com construtor visual', 'Unified search with a visual query builder') },
+      { src: '/img/emmas-librarian/biblioteca-pdf.png', width: 1197, height: 781, alt: L("Biblioteca de PDFs do Emma's Librarian", "Emma's Librarian PDF library"), caption: L('Biblioteca de PDFs e leitor integrado', 'PDF library and built-in reader') },
+      { src: '/img/emmas-librarian/rag-ia.png', width: 1188, height: 772, alt: L('Conversa com IA sobre os artigos, com citação de página', 'AI chat about the papers, with page citations'), caption: L('IA com RAG e citação da página de origem', 'RAG-powered AI with source page citations') },
+      { src: '/img/emmas-librarian/agenda.png', width: 1194, height: 769, alt: L('Agenda do projeto de pesquisa', 'Research project schedule'), caption: L('Agenda e rotina da pesquisa', 'Schedule and research routine') },
     ],
     publications: ['worcap-2026-emmas-librarian'],
   },
@@ -228,7 +232,7 @@ export const projects: Project[] = [
       'A free platform built at IFSP to broaden access to mock exams, essay practice and study material for university entrance exams.'
     ),
     stack: ['FastAPI', 'PostgreSQL', 'React', 'TypeScript', 'Docker'],
-    image: { src: '/img/ifvest/home.jpg', alt: L('Página inicial do IFVest', 'IFVest home page') },
+    image: { src: '/img/ifvest/home.png', width: 2880, height: 1620, alt: L('Página inicial do IFVest', 'IFVest home page') },
     links: [{ kind: 'live', href: 'https://ifvest.com.br' }],
     facts: [
       { label: L('Contexto', 'Context'), value: L('Projeto do IFSP campus Jacareí, ligado à iniciação científica', 'IFSP Jacareí campus project, tied to undergraduate research') },
@@ -274,7 +278,7 @@ export const projects: Project[] = [
       'I created and organized the first version of IFSP’s science and technology museum, both physical and online. Today the project continues with another team, which has changed the site a lot.'
     ),
     stack: ['React', 'TypeScript', 'EmailJS'],
-    image: { src: '/img/museu/home.png', alt: L('Tela inicial do Museu de Ciência e Tecnologia do IFSP', 'Home page of the IFSP Science and Technology Museum') },
+    image: { src: '/img/museu/home.png', width: 1109, height: 924, alt: L('Tela inicial do Museu de Ciência e Tecnologia do IFSP', 'Home page of the IFSP Science and Technology Museum') },
     links: [
       { kind: 'live', href: `${PAGES}museucienciaetecnologia/` },
       { kind: 'repo', href: `${GH}museucienciaetecnologia` },
@@ -316,7 +320,7 @@ export const projects: Project[] = [
       'A social network for rating movies, series, anime, games and books, with profiles and followers. It went offline when the group shifted priorities; we plan to bring it back.'
     ),
     stack: ['Python', 'Django', 'MongoDB'],
-    image: { src: '/img/rankit/home.png', alt: L('Tela inicial do Rank.it', 'Rank.it home page') },
+    image: { src: '/img/rankit/home.png', width: 1120, height: 908, alt: L('Tela inicial do Rank.it', 'Rank.it home page') },
     links: [{ kind: 'repo', href: `${GH}rankit` }],
     facts: [
       { label: L('Contexto', 'Context'), value: L('Projeto em grupo, iniciado em uma disciplina', 'Group project started in a university course') },
@@ -354,7 +358,7 @@ export const projects: Project[] = [
       'Built in one afternoon, when I was just starting to code, so my family could play bingo without a ball cage — and used at that same gathering.'
     ),
     stack: ['JavaScript'],
-    image: { src: '/img/bingo/home.png', alt: L('Tela do Bingo', 'Bingo screen') },
+    image: { src: '/img/bingo/home.png', width: 1559, height: 845, alt: L('Tela do Bingo', 'Bingo screen') },
     links: [
       { kind: 'live', href: `${PAGES}bingo` },
       { kind: 'repo', href: `${GH}bingo` },
@@ -440,7 +444,7 @@ export const projects: Project[] = [
       'AI agents are already capable enough to solve small, well-defined problems.'
     ),
     stack: ['JavaScript', 'Termux', 'Gemini CLI'],
-    image: { src: '/img/lab/home.jpg', alt: L('Hub de experimentos do lab', 'The lab experiments hub') },
+    image: { src: '/img/lab/home.png', width: 2880, height: 1620, alt: L('Hub de experimentos do lab', 'The lab experiments hub') },
     links: [
       { kind: 'live', href: 'https://mastrien.github.io/lab/' },
       { kind: 'repo', href: 'https://github.com/mastrien/lab' },
@@ -461,7 +465,7 @@ export const projects: Project[] = [
       'A personal project I had wanted to build for a long time, with a much stronger game identity than IFVest. Planning it is what led me to join IFVest, a similar project. Django and DRF back end, Next.js front end, Firebase auth, KaTeX for formulas and a procedural question generator, all built with TDD.'
     ),
     stack: ['Django', 'Next.js', 'Firebase'],
-    image: { src: '/img/wisdom-dungeon/home.jpg', alt: L('Página inicial do Wisdom Dungeon', 'Wisdom Dungeon home page') },
+    image: { src: '/img/wisdom-dungeon/home.png', width: 2880, height: 1620, alt: L('Página inicial do Wisdom Dungeon', 'Wisdom Dungeon home page') },
     links: [{ kind: 'live', href: 'https://wisdomdungeon.vercel.app' }],
   },
   {
@@ -627,7 +631,7 @@ export const projects: Project[] = [
     status: 'done',
     summary: L('Um jogo da memória, programado durante uma viagem para passar o tempo.', 'A memory game, coded during a trip to pass the time.'),
     stack: ['JavaScript'],
-    image: { src: '/img/memorygame/home.png', alt: L('Tela do Jogo da Memória', 'Memory game screen') },
+    image: { src: '/img/memorygame/home.png', width: 1327, height: 922, alt: L('Tela do Jogo da Memória', 'Memory game screen') },
     links: [
       { kind: 'live', href: `${PAGES}memorygame/` },
       { kind: 'repo', href: `${GH}memorygame` },
@@ -655,7 +659,7 @@ export const projects: Project[] = [
       'An educational game for practicing addition, subtraction and multiplication: you solve problems to earn money and buy what Pinn, your virtual pet, needs to stay alive.'
     ),
     stack: ['JavaScript', 'HTML', 'CSS'],
-    image: { src: '/img/pinn/home.png', alt: L('Tela do jogo Pinn', 'Pinn game screen') },
+    image: { src: '/img/pinn/home.png', width: 1260, height: 916, alt: L('Tela do jogo Pinn', 'Pinn game screen') },
     links: [
       { kind: 'live', href: `${PAGES}pinn/`, label: L('Jogar', 'Play') },
       { kind: 'repo', href: `${GH}pinn` },
@@ -693,7 +697,7 @@ export const projects: Project[] = [
       'It was more about teaching than learning, but it is when I first felt the need to split code into separate files.'
     ),
     stack: ['JavaScript'],
-    image: { src: '/img/helpincalculus/home.png', alt: L('Tela do HelpInCalculus', 'HelpInCalculus screen') },
+    image: { src: '/img/helpincalculus/home.png', width: 1549, height: 837, alt: L('Tela do HelpInCalculus', 'HelpInCalculus screen') },
     links: [
       { kind: 'live', href: `${PAGES}helpincalculus` },
       { kind: 'repo', href: `${GH}helpincalculus` },
@@ -711,7 +715,7 @@ export const projects: Project[] = [
     ),
     learned: L('Como colocar um sistema full stack em produção e como lidar com MongoDB.', 'How to put a full-stack system in production and how to work with MongoDB.'),
     stack: ['JavaScript', 'MongoDB'],
-    image: { src: '/img/pitsas/home.png', alt: L('Tela do Pitsás', 'Pitsás screen') },
+    image: { src: '/img/pitsas/home.png', width: 1210, height: 723, alt: L('Tela do Pitsás', 'Pitsás screen') },
     links: [
       { kind: 'live', href: 'https://pitsas.onrender.com' },
       { kind: 'repo', href: `${GH}pitsas` },
