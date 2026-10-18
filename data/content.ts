@@ -469,8 +469,8 @@ export const projects: Project[] = [
           { value: '67%', label: L('de acerto do modelo de NLI no teste de sanidade (20 de 30)', 'NLI model accuracy on the sanity test (20 of 30)') },
         ],
         note: L(
-          'Com 4 arquivos de um único orientador, os números são só descritivos. Pela regra fixada antes de ver os dados, o resultado da Fase 0 é estreitar o escopo.',
-          'With 4 files from a single advisor, the numbers are descriptive only. By the rule fixed before looking at the data, the Phase 0 outcome is to narrow the scope.'
+          'Com 4 arquivos de um único orientador, os números são só descritivos.',
+          'With 4 files from a single advisor, the numbers are descriptive only.'
         ),
       },
       {
