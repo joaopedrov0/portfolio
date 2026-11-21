@@ -76,7 +76,7 @@ export function ProductionSection() {
               <span>{t('production.desktop')}</span>
             </span>
             <span className="flex items-center gap-3.5">
-              {emma.logo && <Image src={asset(emma.logo)} alt="" width={40} height={40} unoptimized className="dark:invert" />}
+              {emma.logo && <Image src={asset(emma.logo)} alt="" width={40} height={40} unoptimized className={emma.logoInvert ? 'dark:invert' : undefined} />}
               <h3 className="text-[30px] font-bold tracking-[-0.02em]">{emma.title}</h3>
             </span>
             <p className="max-w-[640px] text-base leading-relaxed text-muted">{pick(emma.summary)}</p>
@@ -94,7 +94,10 @@ export function ProductionSection() {
             )}
             <span className="flex flex-col gap-2.5 px-6 pt-[22px] pb-6">
               <span className="font-mono text-[13px] text-muted"><StatusDot status={ifvest.status} suffix={` · ${yearLabel(ifvest)}`} /></span>
-              <h3 className="text-[21px] font-bold">{ifvest.title}</h3>
+              <span className="flex items-center gap-3">
+                {ifvest.logo && <Image src={asset(ifvest.logo)} alt="" width={30} height={30} unoptimized className={`shrink-0${ifvest.logoInvert ? ' dark:invert' : ''}`} />}
+                <h3 className="text-[21px] font-bold">{ifvest.title}</h3>
+              </span>
               <p className="text-[15px] leading-[1.55] text-muted">{pick(ifvest.summary)}</p>
             </span>
           </Link>
@@ -106,9 +109,12 @@ export function ProductionSection() {
                 href={`/projetos/${p.slug}`}
                 className={`flex items-center justify-between gap-3 py-3.5 text-ink ${i < rest.length - 1 ? 'border-b border-line' : ''}`}
               >
-                <span className="flex min-w-0 flex-col gap-[3px]">
-                  <span className="text-base font-semibold">{p.title}</span>
-                  <span className="text-[13px] text-subtle">{p.year} · {p.stack.join(' · ')}</span>
+                <span className="flex min-w-0 items-center gap-3.5">
+                  {p.logo && <Image src={asset(p.logo)} alt="" width={30} height={30} unoptimized className={`shrink-0${p.logoInvert ? ' dark:invert' : ''}`} />}
+                  <span className="flex min-w-0 flex-col gap-[3px]">
+                    <span className="text-base font-semibold">{p.title}</span>
+                    <span className="text-[13px] text-subtle">{p.year} · {p.stack.join(' · ')}</span>
+                  </span>
                 </span>
                 <StatusPill status={p.status} />
               </Link>
@@ -142,6 +148,7 @@ export function LabSection() {
           >
             <span className="flex-[0_0_56px] font-mono text-[13px] text-subtle">{p.year}</span>
             <span className="flex flex-[0_1_220px] flex-wrap items-center gap-2 text-lg font-semibold">
+              {p.logo && <Image src={asset(p.logo)} alt="" width={22} height={22} unoptimized className={p.logoInvert ? 'dark:invert' : undefined} />}
               {p.title}
               {p.status === 'experimental' && <ExperimentalTag />}
             </span>
