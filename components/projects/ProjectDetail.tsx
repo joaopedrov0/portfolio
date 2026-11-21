@@ -208,7 +208,7 @@ function ProductionDetail({ project }: { project: Project }) {
       <div className="mb-14 flex flex-wrap items-center gap-x-12 gap-y-8">
         {project.logo && (
           <div className="flex h-[120px] w-[120px] shrink-0 items-center justify-center rounded-[28px] border border-line bg-prod-soft">
-            <Image src={asset(project.logo)} alt={`Logo do ${project.title}`} width={80} height={80} unoptimized className="dark:invert" />
+            <Image src={asset(project.logo)} alt={`Logo do ${project.title}`} width={80} height={80} unoptimized className={project.logoInvert ? 'dark:invert' : undefined} />
           </div>
         )}
         <div className="min-w-0 flex-[1_1_520px]">
@@ -297,7 +297,12 @@ function LabDetail({ project }: { project: Project }) {
             )}
             <span className="font-mono text-xs text-subtle">{project.year}</span>
           </div>
-          <h1 className="mb-[18px] text-[40px] leading-[1.05] font-bold tracking-[-0.03em] sm:text-[56px]">{project.title}</h1>
+          <h1 className="mb-[18px] flex items-center gap-4 text-[40px] leading-[1.05] font-bold tracking-[-0.03em] sm:text-[56px]">
+            {project.logo && project.image && (
+              <Image src={asset(project.logo)} alt="" width={56} height={56} unoptimized className={`h-10 w-10 shrink-0 sm:h-14 sm:w-14${project.logoInvert ? ' dark:invert' : ''}`} />
+            )}
+            {project.title}
+          </h1>
           <p className="mb-7 text-[19px] leading-relaxed text-muted">{pick(project.summary)}</p>
           {project.links.length > 0 && (
             <div className="mb-7">
@@ -306,10 +311,16 @@ function LabDetail({ project }: { project: Project }) {
           )}
           <p className="font-mono text-[13px] text-subtle">{project.stack.join(' · ')}</p>
         </div>
-        {project.image && (
+        {project.image ? (
           <div className="w-full min-w-0 flex-[1_1_480px]">
             <ZoomableImage shot={project.image} priority className="overflow-hidden rounded-[20px] border border-line-strong" />
           </div>
+        ) : (
+          project.logo && (
+            <div className="flex w-full min-w-0 flex-[1_1_480px] items-center justify-center rounded-[20px] border border-line bg-lab-soft py-14">
+              <Image src={asset(project.logo)} alt={`Logo do ${project.title}`} width={160} height={160} unoptimized className={project.logoInvert ? 'dark:invert' : undefined} />
+            </div>
+          )
         )}
       </div>
 

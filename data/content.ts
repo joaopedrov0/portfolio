@@ -47,6 +47,8 @@ export interface Project {
   stack: string[];
   image?: Shot;
   logo?: string;
+  /** Logos monocromáticos (preto sobre transparente) precisam inverter no tema escuro. */
+  logoInvert?: boolean;
   links: ProjectLink[];
   facts?: Fact[];
   sections?: Section[];
@@ -105,10 +107,10 @@ export const projects: Project[] = [
     title: "Emma's Librarian",
     year: '2026',
     status: 'in-use',
-    version: 'v1.2.2',
+    version: 'v1.4.0',
     summary: L(
-      'Plataforma local e privada de apoio à pesquisa: busca unificada em Scopus, OpenAlex, Crossref, Europe PMC, arXiv e IEEE, download automático de PDFs de acesso aberto, categorização de artigos e IA com citação da página de origem.',
-      'A local, private research platform: unified search across Scopus, OpenAlex, Crossref, Europe PMC, arXiv and IEEE, automatic download of open-access PDFs, paper categorization, and AI answers that cite the source page.'
+      'Plataforma local e privada de apoio à pesquisa: busca unificada em sete bases, download automático de PDFs de acesso aberto, revisão sistemática com diagrama PRISMA, categorização de artigos e IA com citação da página de origem.',
+      'A local, private research platform: unified search across seven databases, automatic download of open-access PDFs, systematic review with a PRISMA diagram, paper categorization, and AI answers that cite the source page.'
     ),
     lead: L(
       'Uma plataforma local e privada que reúne em um só lugar o que um projeto de pesquisa costuma espalhar por várias ferramentas: busca bibliográfica, leitura de PDFs, categorização, IA e registro do dia a dia.',
@@ -119,9 +121,10 @@ export const projects: Project[] = [
       src: '/img/emmas-librarian/landing.png',
       width: 2880,
       height: 1518,
-      alt: L("Landing page do Emma's Librarian: a suíte completa para revisão sistemática", "Emma's Librarian landing page: the complete suite for systematic reviews"),
+      alt: L("Landing page do Emma's Librarian: a suíte completa para a sua pesquisa", "Emma's Librarian landing page: the complete suite for your research"),
     },
     logo: '/img/emmas-librarian/logo.svg',
+    logoInvert: true,
     links: [
       { kind: 'live', href: 'https://mastrien.github.io/emmas_librarian/', label: L('Acessar o site', 'Visit the site') },
       { kind: 'repo', href: 'https://github.com/mastrien/emmas_librarian' },
@@ -133,7 +136,7 @@ export const projects: Project[] = [
       { label: L('Quem usa', 'Who uses it'), value: L('Alunos de iniciação científica · apresentado no INPE e no IFSP', 'Undergraduate researchers · presented at INPE and IFSP') },
       { label: L('Stack', 'Stack'), value: L('Electron · React · Vite · SQLite · ONNX', 'Electron · React · Vite · SQLite · ONNX') },
       { label: L('IA', 'AI'), value: L('OpenAI · Gemini · Anthropic · Ollama', 'OpenAI · Gemini · Anthropic · Ollama') },
-      { label: L('Distribuição', 'Distribution'), value: L('Instalador .exe com atualização automática', '.exe installer with auto-update') },
+      { label: L('Distribuição', 'Distribution'), value: L('Instalador .exe com atualização automática · AppImage para Linux (experimental)', '.exe installer with auto-update · AppImage for Linux (experimental)') },
     ],
     sections: [
       {
@@ -151,15 +154,22 @@ export const projects: Project[] = [
           {
             title: L('Busca unificada', 'Unified search'),
             body: L(
-              'uma consulta, montada num construtor visual, roda em Scopus, OpenAlex, Crossref, Europe PMC, arXiv e IEEE, e os PDFs de acesso aberto são baixados automaticamente.',
-              'one query, built in a visual editor, runs on Scopus, OpenAlex, Crossref, Europe PMC, arXiv and IEEE, and open-access PDFs are downloaded automatically.'
+              'uma consulta, montada num construtor visual, roda em OpenAlex, Crossref, Scopus, Web of Science, IEEE Xplore, arXiv e Europe PMC, e os PDFs de acesso aberto são baixados automaticamente.',
+              'one query, built in a visual editor, runs on OpenAlex, Crossref, Scopus, Web of Science, IEEE Xplore, arXiv and Europe PMC, and open-access PDFs are downloaded automatically.'
             ),
           },
           {
-            title: L('Investigação massiva e categorização', 'Large-scale screening and categorization'),
+            title: L('Revisão sistemática', 'Systematic review'),
             body: L(
-              'organizar e classificar grandes volumes de artigos segundo os critérios da pesquisa.',
-              'organizing and classifying large volumes of papers according to the research criteria.'
+              'triagem guiada em duas etapas, rótulos e diagrama PRISMA 2020 com exportação.',
+              'two-stage guided screening, labels and a PRISMA 2020 diagram with export.'
+            ),
+          },
+          {
+            title: L('Investigação com IA e categorização', 'AI screening and categorization'),
+            body: L(
+              'organizar e classificar grandes volumes de artigos segundo os critérios da pesquisa, com revisão de cada resposta da IA (aceitar, editar, rejeitar) e auditoria por amostra.',
+              'organizing and classifying large volumes of papers according to the research criteria, reviewing each AI answer (accept, edit, reject) and auditing by sample.'
             ),
           },
           {
@@ -213,12 +223,159 @@ export const projects: Project[] = [
       },
     ],
     gallery: [
-      { src: '/img/emmas-librarian/busca-federada.png', width: 1197, height: 783, alt: L('Construtor visual de consulta em árvore lógica', 'Visual query builder with a logic tree'), caption: L('Busca unificada com construtor visual', 'Unified search with a visual query builder') },
-      { src: '/img/emmas-librarian/biblioteca-pdf.png', width: 1197, height: 781, alt: L("Biblioteca de PDFs do Emma's Librarian", "Emma's Librarian PDF library"), caption: L('Biblioteca de PDFs e leitor integrado', 'PDF library and built-in reader') },
-      { src: '/img/emmas-librarian/rag-ia.png', width: 1188, height: 772, alt: L('Conversa com IA sobre os artigos, com citação de página', 'AI chat about the papers, with page citations'), caption: L('IA com RAG e citação da página de origem', 'RAG-powered AI with source page citations') },
-      { src: '/img/emmas-librarian/agenda.png', width: 1194, height: 769, alt: L('Agenda do projeto de pesquisa', 'Research project schedule'), caption: L('Agenda e rotina da pesquisa', 'Schedule and research routine') },
+      { src: '/img/emmas-librarian/busca-federada.png', width: 1440, height: 900, alt: L('Construtor visual de consulta em árvore lógica', 'Visual query builder with a logic tree'), caption: L('Busca unificada com construtor visual', 'Unified search with a visual query builder') },
+      { src: '/img/emmas-librarian/revisao-triagem-guiada.png', width: 1440, height: 900, alt: L('Triagem guiada da revisão sistemática', 'Guided screening for a systematic review'), caption: L('Revisão sistemática: triagem guiada em duas etapas', 'Systematic review: two-stage guided screening') },
+      { src: '/img/emmas-librarian/revisao-prisma.png', width: 1440, height: 900, alt: L('Diagrama PRISMA 2020 gerado a partir da triagem', 'PRISMA 2020 diagram generated from the screening'), caption: L('Diagrama PRISMA 2020 com os números da triagem', 'PRISMA 2020 diagram built from the screening numbers') },
+      { src: '/img/emmas-librarian/investigacao-ia.png', width: 1440, height: 900, alt: L('Investigação com IA em grade, com revisão de cada resposta', 'AI screening in a grid, with review of each answer'), caption: L('Investigação com IA, com revisão resposta por resposta', 'AI screening, reviewed answer by answer') },
+      { src: '/img/emmas-librarian/rag-ia.png', width: 1440, height: 900, alt: L('Conversa com IA sobre os artigos, com citação de página', 'AI chat about the papers, with page citations'), caption: L('Perguntar aos projetos: IA com citação de artigo e página', 'Ask your projects: AI with paper and page citations') },
+      { src: '/img/emmas-librarian/biblioteca-pdf.png', width: 1440, height: 900, alt: L("Leitor de PDF do Emma's Librarian com destaques e anotações", "Emma's Librarian PDF reader with highlights and notes"), caption: L('Leitor de PDF com destaques e anotações', 'PDF reader with highlights and notes') },
+      { src: '/img/emmas-librarian/agenda.png', width: 1440, height: 900, alt: L('Agenda do projeto de pesquisa', 'Research project schedule'), caption: L('Agenda e rotina da pesquisa', 'Schedule and research routine') },
     ],
     publications: ['worcap-2026-emmas-librarian'],
+  },
+  {
+    slug: 'arca4agents',
+    kind: 'production',
+    title: 'Arca for Agents',
+    year: '2026',
+    ongoing: true,
+    status: 'in-use',
+    version: 'v0.9.2',
+    summary: L(
+      'Gerenciador de tarefas em Rust para quem tem muitos projetos e trabalha com agentes de IA: projetos com pastas vinculadas, painel com a atividade do Claude Code e do Antigravity, servidor MCP com política de acesso e app para o celular.',
+      'A Rust task manager for people with many projects who work with AI agents: projects with linked folders, a panel with Claude Code and Antigravity activity, an MCP server with an access policy, and a phone app.'
+    ),
+    lead: L(
+      'Evolução do Arca: o mesmo modelo de estante, carrinho e feito, agora com projetos, prazo de referência e visibilidade da atividade dos agentes de IA que trabalham nas minhas pastas, no PC e no celular.',
+      'An evolution of Arca: the same shelf, cart and done model, now with projects, reference deadlines and visibility into the AI agents working in my folders, on the PC and on the phone.'
+    ),
+    stack: ['Rust', 'SQLite', 'Tauri', 'Flutter', 'MCP'],
+    image: {
+      src: '/img/arca4agents/desktop.png',
+      width: 1440,
+      height: 900,
+      alt: L('App desktop do Arca for Agents com tarefas de vários projetos e a atividade do Claude Code e do Antigravity', 'Arca for Agents desktop app with tasks from several projects and Claude Code and Antigravity activity'),
+      caption: L('App desktop, com dados fictícios', 'Desktop app, with sample data'),
+    },
+    logo: '/img/arca4agents/logo.svg',
+    logoInvert: true,
+    links: [{ kind: 'repo', href: 'https://github.com/mastrien/arca4agents' }],
+    facts: [
+      { label: L('Contexto', 'Context'), value: L('Projeto pessoal, nascido do arca e do meu uso diário com agentes', 'Personal project, grown out of arca and my daily use with agents') },
+      { key: 'role', label: L('Meu papel', 'My role'), value: L('Desenvolvedor único', 'Sole developer') },
+      { label: L('Período', 'Period'), value: L('2026 – hoje', '2026 – present') },
+      { label: L('Quem usa', 'Who uses it'), value: L('Eu, no dia a dia, com Claude Code e Antigravity', 'Me, day to day, with Claude Code and Antigravity') },
+      { label: L('Plataformas', 'Platforms'), value: L('CLI · app desktop (Tauri) · app para o celular (Flutter)', 'CLI · desktop app (Tauri) · phone app (Flutter)') },
+      { label: L('Stack', 'Stack'), value: L('Rust · SQLite · Tauri · Flutter · MCP', 'Rust · SQLite · Tauri · Flutter · MCP') },
+    ],
+    sections: [
+      {
+        type: 'text',
+        title: L('O problema', 'The problem'),
+        body: L(
+          'Eu tinha muitas tarefas de muitos projetos diferentes, e passei a trabalhar com o Claude Code e o Antigravity em vários deles ao mesmo tempo. Eu perdia de vista qual tarefa era de qual projeto, quem estava fazendo o quê, quem estava parado esperando resposta e o que cada agente podia mexer na minha lista.',
+          'I had many tasks across many different projects, and I started working with Claude Code and Antigravity on several of them at once. I lost track of which task belonged to which project, who was doing what, who was idle waiting for an answer, and what each agent was allowed to change in my list.'
+        ),
+      },
+      {
+        type: 'list',
+        title: L('O que ele faz', 'What it does'),
+        items: [
+          {
+            title: L('Tarefas e projetos', 'Tasks and projects'),
+            body: L(
+              'estante, carrinho e feito, com prazo só de referência. Projetos têm pastas vinculadas, e o projeto certo é descoberto pela pasta onde a sessão está rodando.',
+              'shelf, cart and done, with reference-only deadlines. Projects have linked folders, and the right project is found from the folder a session is running in.'
+            ),
+          },
+          {
+            title: L('Atividade dos agentes', 'Agent activity'),
+            body: L(
+              'hooks do Claude Code registram se cada sessão está trabalhando, esperando ou encerrada, e o painel mostra as sessões por projeto.',
+              'Claude Code hooks record whether each session is working, waiting or ended, and the panel shows sessions per project.'
+            ),
+          },
+          {
+            title: L('Servidor MCP com política', 'MCP server with a policy'),
+            body: L(
+              'os agentes criam e alteram tarefas por um servidor MCP. Cada projeto define se o agente só lê, mexe só no que criou ou gerencia tudo, e a regra é aplicada no servidor.',
+              'agents create and edit tasks through an MCP server. Each project defines whether the agent can only read, change only what it created, or manage everything, and the rule is enforced on the server.'
+            ),
+          },
+          {
+            title: L('Cota dos agentes', 'Agent quota'),
+            body: L(
+              'guarda o percentual usado das janelas de limite do Claude Code e do Codex e mostra a série num gráfico.',
+              'stores the percentage used in the Claude Code and Codex rate-limit windows and plots the series.'
+            ),
+          },
+          {
+            title: L('App para o celular', 'Phone app'),
+            body: L(
+              'carrinho, estante, feitas e agentes no celular, com banco próprio que funciona offline. Pareia com o PC lendo um QR code e sincroniza na rede de casa.',
+              'cart, shelf, done and agents on the phone, with its own database that works offline. It pairs with the PC by scanning a QR code and syncs over the home network.'
+            ),
+          },
+        ],
+      },
+      {
+        type: 'cards',
+        title: L('Decisões técnicas', 'Technical decisions'),
+        items: [
+          {
+            title: L('Sem ruído no contexto do agente', 'No noise in the agent’s context'),
+            body: L(
+              'O ping dos hooks nunca escreve no stdout nem falha, porque a saída dos hooks de início de sessão entra no contexto do agente. Os erros vão para um log.',
+              'The hook ping never writes to stdout or fails, because the output of session-start hooks enters the agent’s context. Errors go to a log file.'
+            ),
+          },
+          {
+            title: L('A política vale no servidor', 'The policy lives on the server'),
+            body: L(
+              'Uma violação devolve um erro de ferramenta com o motivo, e o agente pode usar suggest_change para propor a mudança, que eu aprovo ou rejeito.',
+              'A violation returns a tool error with the reason, and the agent can use suggest_change to propose the change, which I approve or reject.'
+            ),
+          },
+        ],
+      },
+    ],
+    gallery: [
+      {
+        src: '/img/arca4agents/projeto.png',
+        width: 1440,
+        height: 900,
+        alt: L('Visão de um projeto no Arca for Agents: tarefas, o Claude Code trabalhando e sugestões de agentes para aprovar', 'A project view in Arca for Agents: tasks, Claude Code working and agent suggestions to approve'),
+        caption: L('Visão de um projeto, com o agente trabalhando e sugestões para aprovar ou rejeitar', 'A project view, with the agent working and suggestions to approve or reject'),
+      },
+      {
+        src: '/img/arca4agents/agentes.png',
+        width: 1440,
+        height: 900,
+        alt: L('Filtro "só agentes" mostrando as tarefas criadas pelo Claude Code e pelo Antigravity', '"Agents only" filter showing the tasks created by Claude Code and Antigravity'),
+        caption: L('Só agentes: o que o Claude Code e o Antigravity anotaram', 'Agents only: what Claude Code and Antigravity wrote down'),
+      },
+      {
+        src: '/img/arca4agents/projetos.png',
+        width: 1440,
+        height: 900,
+        alt: L('Gerenciamento de projetos com pastas vinculadas e política de acesso dos agentes', 'Project management with linked folders and the agents’ access policy'),
+        caption: L('Projetos: pastas vinculadas e política de acesso dos agentes (NONE, OWN ou ALL)', 'Projects: linked folders and the agents’ access policy (NONE, OWN or ALL)'),
+      },
+      {
+        src: '/img/arca4agents/datas.png',
+        width: 1440,
+        height: 900,
+        alt: L('Tela de datas com os prazos de todos os projetos', 'Dates screen with the deadlines of all projects'),
+        caption: L('Datas: os prazos de todos os projetos num lugar só', 'Dates: the deadlines of every project in one place'),
+      },
+      {
+        src: '/img/arca4agents/celular.png',
+        width: 920,
+        height: 820,
+        alt: L('App do Arca for Agents no celular, com a lista de tarefas e o painel de agentes', 'Arca for Agents phone app, with the task list and the agents panel'),
+        caption: L('App do celular: tarefas por projeto e agentes esperando resposta, com dados fictícios', 'Phone app: tasks per project and agents waiting for an answer, with sample data'),
+      },
+    ],
   },
   {
     slug: 'ifvest',
@@ -385,6 +542,42 @@ export const projects: Project[] = [
   },
 
   // ---------- Laboratório ----------
+  {
+    slug: '0spof',
+    kind: 'lab',
+    title: '0spof',
+    year: '2026',
+    status: 'experimental',
+    version: 'v0.2.0',
+    summary: L(
+      'Ecossistema offline-first para consultar materiais, prazos e notas do Moodle e enfileirar entregas quando o servidor cai, com prova de entrega por carimbo de tempo (RFC 3161).',
+      'An offline-first ecosystem to browse Moodle materials, deadlines and grades and to queue submissions while the server is down, with proof of delivery through trusted timestamping (RFC 3161).'
+    ),
+    details: L(
+      'O nome vem de Zero Single Point of Failure: a plataforma institucional não deveria ser o ponto único de falha de um prazo de entrega. Os arquivos entram numa fila com hash SHA-256 e carimbo de tempo, e são reenviados sozinhos pelo padrão Outbox quando o servidor volta. É um monorepo em Rust com o núcleo compartilhado, uma CLI, um servidor MCP para agentes de IA, um app desktop em Tauri v2 e um app mobile em Flutter. O CI exige no mínimo 70% de cobertura de testes.',
+      'The name stands for Zero Single Point of Failure: the institutional platform should not be the single point of failure for a submission deadline. Files go into a queue with a SHA-256 hash and a timestamp, and are resent automatically through the Outbox pattern when the server comes back. It is a Rust monorepo with a shared core, a CLI, an MCP server for AI agents, a Tauri v2 desktop app and a Flutter mobile app. CI requires at least 70% test coverage.'
+    ),
+    stack: ['Rust', 'Tauri', 'Flutter', 'SQLite'],
+    image: {
+      src: '/img/0spof/painel.png',
+      width: 1440,
+      height: 900,
+      alt: L('Painel do 0spof com prazos pendentes e a fila de envio', '0spof dashboard with pending deadlines and the submission queue'),
+      caption: L('Painel de resiliência, com dados fictícios', 'Resilience dashboard, with sample data'),
+    },
+    gallery: [
+      {
+        src: '/img/0spof/fila-de-envio.png',
+        width: 1440,
+        height: 900,
+        alt: L('Fila de envio do 0spof com entregas pendentes e já enviadas', '0spof submission queue with pending and delivered items'),
+        caption: L('Fila de envio, com o dossiê de cada entrega', 'Submission queue, with a dossier for each delivery'),
+      },
+    ],
+    logo: '/img/0spof/logo.svg',
+    logoInvert: true,
+    links: [{ kind: 'repo', href: 'https://github.com/mastrien/0spof' }],
+  },
   {
     slug: 'paper-advisor',
     kind: 'lab',
@@ -649,6 +842,26 @@ export const projects: Project[] = [
       },
     ],
     links: [{ kind: 'repo', href: 'https://github.com/mastrien/arca' }],
+  },
+  {
+    slug: 'system-designer',
+    kind: 'lab',
+    title: 'System Designer',
+    year: '2026',
+    status: 'live',
+    summary: L(
+      'Editor visual de arquitetura de software: componentes, conexões e detalhes progressivos num canvas livre, que roda inteiro no navegador.',
+      'A visual software architecture editor: components, connections and progressive detail on a free canvas, running entirely in the browser.'
+    ),
+    details: L(
+      'O princípio é a complexidade progressiva: "Cliente → Servidor" já é um cenário completo, e rotas, tabelas, modelos de IA e variáveis de ambiente entram só quando fazem sentido. Os cenários ficam salvos no IndexedDB, podem ser vinculados a um arquivo JSON que agentes de IA editam por MCP ou CLI e podem ser exportados como Markdown, Mermaid, PNG ou SVG. Também tem diagrama ER, mapa de navegação, animação do fluxo e suporte a mesa digitalizadora.',
+      'The principle is progressive complexity: "Client → Server" is already a complete scenario, and routes, tables, AI models and environment variables only come in when they make sense. Scenarios are stored in IndexedDB, can be linked to a JSON file that AI agents edit through MCP or CLI, and can be exported as Markdown, Mermaid, PNG or SVG. It also has an ER diagram, a navigation map, flow animation and drawing-tablet support.'
+    ),
+    stack: ['TypeScript', 'React'],
+    links: [
+      { kind: 'live', href: `${PAGES}system-designer/` },
+      { kind: 'repo', href: `${GH}system-designer` },
+    ],
   },
   {
     slug: 'zolt-summarizer',
@@ -934,6 +1147,7 @@ export const labProjects = projects.filter((p) => p.kind === 'lab');
 
 // Laboratório na home: seleção curta, o resto fica em /projetos
 export const homeLabSlugs = [
+  '0spof',
   'paper-advisor',
   'ultimato-de-tho-ka',
   'wisdom-dungeon',
